@@ -3,7 +3,7 @@ import time
 
 # Configure the UART port
 uart = serial.Serial(
-    port='/dev/ttyUSB0',  # Replace with your UART port (e.g., COM3 for Windows)
+    port='/dev/ttyAMA0',  # Replace with your UART port (e.g., COM3 for Windows)
     baudrate=9600,        # Set the baud rate
     bytesize=serial.EIGHTBITS,
     parity=serial.PARITY_NONE,
