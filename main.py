@@ -5,7 +5,7 @@ import time
 I2C_BUS = 1
 
 # Device I2C address
-DEVICE_ADDRESS = 0x40  # Replace with your device's address
+DEVICE_ADDRESS = 0x42  # Replace with your device's address
 
 # Registers or commands (replace with your specific device's registers)
 REGISTER_WRITE = 0x01
