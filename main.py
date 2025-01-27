@@ -15,7 +15,7 @@ try:
         bus.write_i2c_block_data(I2C_SLAVE_ADDR, 0x00, data_to_send)
         print(f"Sent: {data_to_send}")
 
-        time.sleep(0.1)
+        time.sleep(1)
 
         # Read response from the Pico
         response = bus.read_i2c_block_data(I2C_SLAVE_ADDR, 0x00, 10)  # Read 10 bytes
