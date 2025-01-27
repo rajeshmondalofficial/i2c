@@ -11,20 +11,13 @@ uart = serial.Serial(
     timeout=1             # Timeout in seconds for reading
 )
 
-# Check if the UART port is open
-if uart.is_open:
-    print("UART port is open")
-
-# Data to send
-data_to_send = "Hello, UART!\n"
-
-# Send data
-uart.write(data_to_send.encode('utf-8'))  # Encode string to bytes
-print(f"Sent: {data_to_send}")
-
-# Wait for a moment
-time.sleep(1)
-
-# Close the UART port
-uart.close()
-print("UART port closed")
+try:
+    print("Reading from UART...")
+    while True:
+        if uart.in_waiting > 0:  # Check if data is available
+            data = uart.readline().decode('utf-8').strip()  # Read and decode
+            print(f"Received: {data}")
+except KeyboardInterrupt:
+    print("Exiting...")
+finally:
+    uart.close()
