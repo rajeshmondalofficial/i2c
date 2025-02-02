@@ -3,7 +3,7 @@ import smbus2
 # Define I2C parameters
 I2C_BUS = 1  # Change to 0 if using older Raspberry Pi models
 LM75A_ADDRESS = 0x48  # Default I2C address of LM75A
-TEMP_REGISTER = 0x07  # Temperature register
+TEMP_REGISTER = 0x00  # Temperature register
 
 def read_lm75a_temp():
     bus = smbus2.SMBus(I2C_BUS)
