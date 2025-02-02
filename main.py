@@ -1,22 +1,35 @@
 import smbus2
 
-def detect_i2c_devices(bus_num=1):
-    bus = smbus2.SMBus(bus_num)
-    devices = []
-    
-    for address in range(0x03, 0x78):  # Valid I2C addresses
-        try:
-            bus.read_byte(address)  # Try to read a byte
-            devices.append(hex(address))
-        except OSError:
-            pass  # Ignore errors (device not found)
-    
-    bus.close()
-    return devices
+# Define I2C parameters
+I2C_BUS = 1  # Change to 0 if using older Raspberry Pi models
+LM75A_ADDRESS = 0x48  # Default I2C address of LM75A
+TEMP_REGISTER = 0x00  # Temperature register
 
-if __name__ == "__main__":
-    detected_devices = detect_i2c_devices()
-    if detected_devices:
-        print("I2C devices found at addresses:", detected_devices)
-    else:
-        print("No I2C devices detected.")
+def read_lm75a_temp():
+    bus = smbus2.SMBus(I2C_BUS)
+    
+    try:
+        # Read two bytes from the temperature register
+        raw_data = bus.read_word_data(LM75A_ADDRESS, TEMP_REGISTER)
+        
+        # Convert to correct byte order (LM75A sends MSB first)
+        raw_data = ((raw_data << 8) & 0xFF00) | (raw_data >> 8)
+        
+        # Extract temperature value (11-bit resolution, two's complement)
+        temp = raw_data >> 5  # Shift right to remove unused bits
+        if temp & 0x0400:  # Check if negative (11th bit is sign)
+            temp -= 8192  # Convert to negative value (two's complement)
+        
+        temperature_celsius = temp * 0.125  # Each step is 0.125°C
+        
+        return temperature_celsius
+    except OSError:
+        print("Failed to read from LM75A sensor")
+        return None
+    finally:
+        bus.close()
+
+# Read temperature and print
+temperature = read_lm75a_temp()
+if temperature is not None:
+    print(f"Temperature: {temperature:.2f} °C")
