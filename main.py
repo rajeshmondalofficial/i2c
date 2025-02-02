@@ -22,7 +22,7 @@ def read_lm75a_temp():
         
         temperature_celsius = temp * 0.125  # Each step is 0.125°C
         
-        return temperature_celsius
+        return raw_data
     except OSError:
         print("Failed to read from LM75A sensor")
         return None
