@@ -1,24 +1,29 @@
 import serial
-import time
+import sys
+# Configure the serial port
+port = "/dev/ttyAMA0"  # Replace with the correct port for your setup (e.g., COM3 on Windows)
+baud_rate = 9600
 
-# Configure the UART port
-uart = serial.Serial(
-    # Replace with your UART port (e.g., COM3 for Windows)
-    port='/dev/ttyAMA0',
-    baudrate=9600,        # Set the baud rate
-    bytesize=serial.EIGHTBITS,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    timeout=1             # Timeout in seconds for reading
-)
+# Initialize the serial connection
+ser = serial.Serial(port, baud_rate, timeout=1)
+ser.reset_input_buffer()
+ser.reset_output_buffer()
 
 try:
-    print("Reading from UART...")
+    # Data to send
+    send_data = f"{sys.argv[1]}\r\n"
+
+    # Write data to UART
+    ser.write(send_data.encode('utf-8'))
+    print(f"Sent: {send_data}")
+
+    # Read the data back
     while True:
-        if uart.in_waiting > 0:  # Check if data is available
-            data = uart.readline().decode('utf-8').strip()  # Read and decode
-            print(f"Received: {data}")
+        received_data = ser.read(1024).decode('utf-8')
+        if received_data:
+            print(f"Received: {received_data}")
 except KeyboardInterrupt:
-    print("Exiting...")
+    print("\nInterrupted by user. Exiting...")
 finally:
-    uart.close()
+    # Close the serial connection
+    ser.close()
