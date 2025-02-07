@@ -11,8 +11,9 @@ uart = serial.Serial(
     stopbits=serial.STOPBITS_ONE,
     timeout=1             # Timeout in seconds for reading
 )
+send_data = f"Hello World"
 
-
+uart.write(send_data.encode('utf-8'))
 try:
     print("Reading from UART...")
     while True:
