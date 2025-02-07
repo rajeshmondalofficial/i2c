@@ -12,7 +12,7 @@ uart = serial.Serial(
     timeout=1             # Timeout in seconds for reading
 )
 
-uart.write("Hello From Pi3")
+uart.write(b'Hello From Pi3')
 
 
 # try:
